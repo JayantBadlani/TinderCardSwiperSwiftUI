@@ -4,7 +4,7 @@
 
 With Tinder Card Swiper, you can easily create a stack of cards that users can swipe left or right on. Each card can contain any SwiftUI view, giving you complete control over the content of your swiping interface.
 
-![Uploading ezgif.com-resize.gif…]()
+![ezgif com-resize](https://user-images.githubusercontent.com/37996543/222895736-1d0f4bda-c48e-4b1d-9441-9eaf8cb30909.gif)
 
 ### Installation
 To use Tinder Card Swiper in your project, simply copy the TinderCardSwiper.swift file into your project's source code. You can then import the TinderCardSwiper class into any SwiftUI view where you want to use it.

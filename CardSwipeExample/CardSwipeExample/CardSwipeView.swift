@@ -21,16 +21,18 @@ public struct CardView<Content: View>: View {
     @State public var color: Color = .black
     @State public var isRemoved = false
     @State public var tagId: UUID = UUID()
+    var index: Int
     public var onCardRemoved: (() -> Void)?
     public var onCardAdded: (() -> Void)?
     public var content: () -> Content
     
     // MARK: - Initializer
     
-    public init(tagId: UUID, onCardRemoved: (() -> Void)? = nil, onCardAdded: (() -> Void)? = nil, @ViewBuilder content: @escaping () -> Content) {
+    public init(index: Int, tagId: UUID, onCardRemoved: (() -> Void)? = nil, onCardAdded: (() -> Void)? = nil, @ViewBuilder content: @escaping () -> Content) {
         self.onCardRemoved = onCardRemoved
         self.onCardAdded = onCardAdded
         self.content = content
+        self.index = index
         self.tagId = tagId
     }
     

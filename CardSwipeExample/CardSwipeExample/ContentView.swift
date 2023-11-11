@@ -34,7 +34,6 @@ typealias Card = CardView<ExampleCardView>
 struct ContentView: View {
   
     @State var cards: [Card]
-    @State var currentIndex: Int = 0
 
     var body: some View {
         VStack {
@@ -54,11 +53,7 @@ struct ContentView: View {
           // Cards
           ZStack {
             ForEach(cards, id: \.tagId) { card in
-              card
-                .animation(.spring())
-                .zIndex(Double(cards.count))
-                .offset(x: 0, y: -10)
-                .rotationEffect(.degrees(Double((currentIndex == 0 ? 0 : currentIndex - 1) * 2)))
+              updateCard(card)
             }
           }
           .padding(.top, 20)
@@ -69,12 +64,20 @@ struct ContentView: View {
         }
     }
   
+  private func updateCard(_ card: Card) -> some View {
+    card
+      .animation(.spring())
+      .zIndex(Double(cards.count - card.index))
+      .offset(x: 0, y: 10 + CGFloat(card.index) * 10)
+      .rotationEffect(.degrees(-(Double(card.index)) * 0.7))
+  }
+  
   private func loadCards() {
     cards = [
-        CardView(tagId: UUID(), content: { ExampleCardView() }),
-        CardView(tagId: UUID(), content: { ExampleCardView() }),
-        CardView(tagId: UUID(), content: { ExampleCardView() }),
-        CardView(tagId: UUID(), content: { ExampleCardView() })
+      CardView(index: 0, tagId: UUID(), content: { ExampleCardView() }),
+      CardView(index: 1, tagId: UUID(), content: { ExampleCardView() }),
+      CardView(index: 2, tagId: UUID(), content: { ExampleCardView() }),
+      CardView(index: 3, tagId: UUID(), content: { ExampleCardView() })
     ]
   }
 }

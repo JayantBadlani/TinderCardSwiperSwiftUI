@@ -66,7 +66,7 @@ struct ContentView: View {
   
   private func updateCard(_ card: Card) -> some View {
     card
-      .animation(.spring())
+      .animation(.spring(), value: UUID())
       .zIndex(Double(cards.count - card.index))
       .offset(x: 0, y: 10 + CGFloat(card.index) * 10)
       .rotationEffect(.degrees(-(Double(card.index)) * 0.7))

@@ -8,88 +8,123 @@
 
 import SwiftUI
 
-@available(iOS 13.0, *)
-@available(macOS 10.15, *)
-@available(tvOS 13.0, *)
-@available(watchOS 6.0, *)
+enum SwipeDirection {
+    case left, right, top, bottom
+}
 
-public struct CardView<Content: View>: View {
+
+public struct CardSwiperView<Content: View>: View {
     
-    // MARK: - Properties
+    @Binding var cards: [Content]
     
-    @State public var offset = CGSize.zero
-    @State public var color: Color = .black
-    @State public var isRemoved = false
-    @State public var tagId: UUID = UUID()
-    var index: Int
-    public var onCardRemoved: (() -> Void)?
-    public var onCardAdded: (() -> Void)?
-    public var content: () -> Content
+    var onCardSwiped: ((SwipeDirection, Int) -> Void)?
+    var initialOffsetY: CGFloat = 5
+    var initialRotationAngle: Double = 0.5
     
-    // MARK: - Initializer
-    
-    public init(index: Int, tagId: UUID, onCardRemoved: (() -> Void)? = nil, onCardAdded: (() -> Void)? = nil, @ViewBuilder content: @escaping () -> Content) {
-        self.onCardRemoved = onCardRemoved
-        self.onCardAdded = onCardAdded
-        self.content = content
-        self.index = index
-        self.tagId = tagId
+    init(
+        cards: Binding<[Content]>, // Updated parameter to use Binding
+        onCardSwiped: ((SwipeDirection, Int) -> Void)? = nil,
+        initialOffsetY: CGFloat = 5,
+        initialRotationAngle: Double = 0.5
+    ) {
+        self._cards = cards // Update to Binding
+        self.onCardSwiped = onCardSwiped
+        self.initialOffsetY = initialOffsetY
+        self.initialRotationAngle = initialRotationAngle
     }
-    
-    // MARK: - Body
     
     public var body: some View {
         ZStack {
+            ForEach(cards.indices, id: \.self) { index in
+                CardView(
+                    index: index,
+                    onCardSwiped: { swipeDirection in
+                        onCardSwiped?(swipeDirection, index)
+                    },
+                    content: {
+                        cards[index]
+                    },
+                    initialOffsetY: initialOffsetY,
+                    initialRotationAngle: initialRotationAngle,
+                    zIndex: Double(cards.count - index)
+                )
+                .id(UUID())
+            }
+        }
+    }
+    
+    private struct CardView<Content: View>: View {
+        var index: Int
+        var onCardSwiped: ((SwipeDirection) -> Void)?
+        var content: () -> Content
+        var initialOffsetY: CGFloat
+        var initialRotationAngle: Double
+        var zIndex: Double
+        
+        @State private var offset = CGSize.zero
+        @State private var color: Color = .black
+        @State private var isRemoved = false
+        
+        var body: some View {
             content()
                 .frame(width: 320, height: 420)
+                .offset(x: offset.width * 1, y: offset.height * 0.4)
+                .rotationEffect(.degrees(Double(offset.width / 40)))
+                .zIndex(zIndex)
+                .gesture(
+                    DragGesture()
+                        .onChanged { gesture in
+                            offset = gesture.translation
+                            withAnimation {
+                                updateCardColor(width: offset.width)
+                            }
+                        }
+                        .onEnded { gesture in
+                            withAnimation {
+                                handleSwipe(width: offset.width, height: offset.height)
+                                updateCardColor(width: offset.width)
+                            }
+                        }
+                )
+                .opacity(isRemoved ? 0 : 1)
+        }
+        
+        func handleSwipe(width: CGFloat, height: CGFloat) {
+            var swipeDirection: SwipeDirection = .left
             
+            switch (width, height) {
+            case (-500...(-150), _):
+                swipeDirection = .left
+                offset = CGSize(width: -500, height: 0)
+                isRemoved = true
+            case (150...500, _):
+                swipeDirection = .right
+                offset = CGSize(width: 500, height: 0)
+                isRemoved = true
+            case (_, -500...(-150)):
+                swipeDirection = .top
+                offset = CGSize(width: 0, height: -500)
+                isRemoved = true
+            case (_, 150...500):
+                swipeDirection = .bottom
+                offset = CGSize(width: 0, height: 500)
+                isRemoved = true
+            default:
+                offset = .zero
+            }
+            
+            onCardSwiped?(swipeDirection)
         }
-        .offset(x: offset.width * 1, y: offset.height * 0.4)
-        .rotationEffect(.degrees(Double(offset.width / 40)))
-        .gesture(
-            DragGesture()
-                .onChanged { gesture in
-                    offset = gesture.translation
-                    withAnimation {
-                        updateCardColor(width: offset.width)
-                    }
-                }
-                .onEnded { _ in
-                    withAnimation {
-                        handleSwipe(width: offset.width)
-                        updateCardColor(width: offset.width)
-                    }
-                }
-        )
-        .opacity(isRemoved ? 0 : 1) // add this modifier to handle card removal
-    }
-    
-    // MARK: - Methods
-    
-    public func handleSwipe(width: CGFloat) {
-        switch width {
-        case -500...(-150):
-            onCardRemoved?()
-            offset = CGSize(width: -500, height: 0)
-            isRemoved = true // set isRemoved to true
-        case 150...500:
-            onCardAdded?()
-            offset = CGSize(width: 500, height: 0)
-            isRemoved = true // set isRemoved to true
-        default:
-            offset = .zero
-        }
-    }
-    
-    
-    public func updateCardColor(width: CGFloat) {
-        switch width {
-        case -500...(-130):
-            color = .red
-        case 130...500:
-            color = .green
-        default:
-            color = .black
+        
+        func updateCardColor(width: CGFloat) {
+            switch width {
+            case -500...(-130):
+                color = .red
+            case 130...500:
+                color = .green
+            default:
+                color = .black
+            }
         }
     }
 }

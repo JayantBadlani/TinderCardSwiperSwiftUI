@@ -29,27 +29,61 @@ struct ExampleCardView: View {
     }
 }
 
+typealias Card = CardView<ExampleCardView>
+
 struct ContentView: View {
-    let cards: [CardView<ExampleCardView>] = [
-        CardView(content: { ExampleCardView() }),
-        CardView(content: { ExampleCardView() }),
-        CardView(content: { ExampleCardView() }),
-        CardView(content: { ExampleCardView() })
-    ]
+  
+    @State var cards: [Card]
 
     var body: some View {
         VStack {
             Text("Swipe left or right")
                 .font(.title)
                 .foregroundColor(.gray)
-            CardStackView(cards: cards, cardAction: {})
-                .frame(height: 500)
+          Button {
+            print("Resetting...")
+            loadCards()
+          } label: {
+            HStack {
+              Image(systemName: "arrow.clockwise.circle.fill")
+              Text("Reset Cards")
+            }
+          }
+
+          // Cards
+          ZStack {
+            ForEach(cards, id: \.tagId) { card in
+              updateCard(card)
+            }
+          }
+          .padding(.top, 20)
+          .padding(.horizontal, 20.0)
+        }
+        .onAppear {
+          loadCards()
         }
     }
+  
+  private func updateCard(_ card: Card) -> some View {
+    card
+      .animation(.spring(), value: UUID())
+      .zIndex(Double(cards.count - card.index))
+      .offset(x: 0, y: 10 + CGFloat(card.index) * 10)
+      .rotationEffect(.degrees(-(Double(card.index)) * 0.7))
+  }
+  
+  private func loadCards() {
+    cards = [
+      CardView(index: 0, tagId: UUID(), content: { ExampleCardView() }),
+      CardView(index: 1, tagId: UUID(), content: { ExampleCardView() }),
+      CardView(index: 2, tagId: UUID(), content: { ExampleCardView() }),
+      CardView(index: 3, tagId: UUID(), content: { ExampleCardView() })
+    ]
+  }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+      ContentView(cards: [])
     }
 }

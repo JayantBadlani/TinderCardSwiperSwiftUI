@@ -11,7 +11,7 @@ import SwiftUI
 struct CardSwipeExampleApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+          ContentView(cards: [])
         }
     }
 }

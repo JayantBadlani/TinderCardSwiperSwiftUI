@@ -82,7 +82,6 @@ public struct CardSwiperView<Content: View>: View {
                         .onEnded { gesture in
                             withAnimation {
                                 handleSwipe(width: offset.width, height: offset.height)
-                                updateCardColor(width: offset.width)
                             }
                         }
                 )
@@ -97,23 +96,27 @@ public struct CardSwiperView<Content: View>: View {
                 swipeDirection = .left
                 offset = CGSize(width: -500, height: 0)
                 isRemoved = true
+                onCardSwiped?(swipeDirection)
             case (150...500, _):
                 swipeDirection = .right
                 offset = CGSize(width: 500, height: 0)
                 isRemoved = true
+                onCardSwiped?(swipeDirection)
             case (_, -500...(-150)):
                 swipeDirection = .top
                 offset = CGSize(width: 0, height: -500)
                 isRemoved = true
+                onCardSwiped?(swipeDirection)
             case (_, 150...500):
                 swipeDirection = .bottom
                 offset = CGSize(width: 0, height: 500)
                 isRemoved = true
+                onCardSwiped?(swipeDirection)
             default:
                 offset = .zero
             }
             
-            onCardSwiped?(swipeDirection)
+            
         }
         
         func updateCardColor(width: CGFloat) {

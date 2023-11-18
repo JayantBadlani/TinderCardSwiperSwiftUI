@@ -9,6 +9,7 @@ import SwiftUI
 
 
 struct ContentView: View {
+    
     @State var cards: [ExampleCardView]
     
     var body: some View {

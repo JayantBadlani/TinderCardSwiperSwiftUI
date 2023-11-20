@@ -34,12 +34,12 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		A2952E7A2B0BAF7300D497CB /* CardSwiperVier */ = {
+		A2952E7A2B0BAF7300D497CB /* CardSwiperView */ = {
 			isa = PBXGroup;
 			children = (
 				A2BE0BBD29B3535F000F72A2 /* CardSwipeView.swift */,
 			);
-			path = CardSwiperVier;
+			path = CardSwiperView;
 			sourceTree = "<group>";
 		};
 		A2BE0BA329B352F7000F72A2 = {
@@ -63,8 +63,8 @@
 			children = (
 				A2BE0BAF29B352F7000F72A2 /* CardSwipeExampleApp.swift */,
 				A2BE0BB129B352F7000F72A2 /* ContentView.swift */,
+				A2952E7A2B0BAF7300D497CB /* CardSwiperView */,
 				A2BE0BB329B352FA000F72A2 /* Assets.xcassets */,
-				A2952E7A2B0BAF7300D497CB /* CardSwiperVier */,
 				A2BE0BB529B352FA000F72A2 /* Preview Content */,
 			);
 			path = CardSwipeExample;

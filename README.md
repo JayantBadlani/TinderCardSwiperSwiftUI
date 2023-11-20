@@ -15,18 +15,37 @@ To use Tinder Card Swiper, you'll first need to create a list of cards that you 
 Once you have your list of cards, you can create a TinderCardSwiper instance and pass your list of cards as a parameter:
 
 ```ruby
-let cardViews = [CardView1(), CardView2(), CardView3()]
-let cardSwiper = TinderCardSwiper(cardViews: cardViews)
-You can then add the TinderCardSwiper instance to your SwiftUI view hierarchy:
-```
+@State var cards: [ExampleCardView] // Assuming ExampleCardView is your custom card view
 
-
-```ruby
 var body: some View {
     VStack {
-        cardSwiper
+        // Your other UI components
+        
+        // Card Swiper View
+        CardSwiperView(cards: self.$cards, onCardSwiped: { swipeDirection, index in
+            switch swipeDirection {
+                case .left:
+                    print("Card swiped Left direction at index \(index)")
+                case .right:
+                    print("Card swiped Right direction at index \(index)")
+                case .top:
+                    print("Card swiped Top direction at index \(index)")
+                case .bottom:
+                    print("Card swiped Bottom direction at index \(index)")
+            }
+        }, onCardDragged: { swipeDirection, index, offset in
+            print("Card dragged \(swipeDirection) direction at index \(index) with offset \(offset)")
+        })
+        .padding(.vertical, 20)
+        
+        // Your other UI components
+    }
+    .onAppear {
+        loadCards()
     }
 }
+
+
 ```
 
 Tinder Card Swiper will automatically display your list of cards as a stack that users can swipe left or right on.

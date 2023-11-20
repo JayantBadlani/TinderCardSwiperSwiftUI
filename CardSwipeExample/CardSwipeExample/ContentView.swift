@@ -40,6 +40,8 @@ struct ContentView: View {
                 case .bottom:
                     print("Card swiped Bottom direction at index \(index)")
                 }
+            }, onCardDragged: { swipeDirection, index, offset in
+                print("Card dragged \(swipeDirection) direction at index \(index) with offset \(offset)")
             })
             .padding(.vertical, 20)
         }
@@ -53,7 +55,11 @@ struct ContentView: View {
             ExampleCardView(index: 0),
             ExampleCardView(index: 1),
             ExampleCardView(index: 2),
-            ExampleCardView(index: 3)
+            ExampleCardView(index: 3),
+            ExampleCardView(index: 5),
+            ExampleCardView(index: 6),
+            ExampleCardView(index: 7),
+            ExampleCardView(index: 8)
         ]
         // Assigning a new array instance to the @State variable
         cards = newCards

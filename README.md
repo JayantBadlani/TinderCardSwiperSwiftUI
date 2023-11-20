@@ -54,20 +54,13 @@ Tinder Card Swiper will automatically display your list of cards as a stack that
 Tinder Card Swiper provides a number of customization options that allow you to tailor the appearance and behavior of your card swiping interface. These options can be set using the TinderCardSwiper instance's properties:
 
 ```ruby
-// Set the maximum number of cards to display in the stack at once
-cardSwiper.maxVisibleCards = 3
 
-// Set the minimum swipe distance required to trigger a card swipe
-cardSwiper.swipeThreshold = 100
+// Set the angle that the cards should be initialOffsetY as they display in stack
+cardSwiper.initialOffsetY = 5
 
-// Set the angle that the cards should be rotated by as they are swiped
-cardSwiper.cardRotationAngle = 10
+// Set the amount that the cards should be display rotated as they display in stack
+cardSwiper.initialRotationAngle = 0.5
 
-// Set the amount that the cards should be scaled as they move away from the center of the screen
-cardSwiper.cardScaleFactor = 0.1
-
-// Set the amount of horizontal and vertical padding to apply to each card
-cardSwiper.cardPadding = .init(horizontal: 16, vertical: 16)
 ```
 
 You can also customize the appearance of your cards by applying any SwiftUI modifiers that you like to each card view.
